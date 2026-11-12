@@ -1,0 +1,21 @@
+services:
+  drive:
+    build: .
+    container_name: home-drive
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DATA_DIR: /data
+      INGEST_DIR: /data/ingest
+      SITE_NAME: ${SITE_NAME:-Home Drive}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+      SESSION_SECRET: ${SESSION_SECRET:-}
+      MAX_UPLOAD_GB: ${MAX_UPLOAD_GB:-200}
+      CHUNK_SIZE_MB: ${CHUNK_SIZE_MB:-8}
+    # Uncomment to write files as your own UID instead of root:
+    # user: "1000:1000"
+    volumes:
+      # Host directory that actually stores the files. Put it on your big disk.
+      - ${DRIVE_PATH:-./data}:/data
